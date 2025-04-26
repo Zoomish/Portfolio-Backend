@@ -15,6 +15,43 @@ export class BotService implements OnModuleInit {
 
     async initBot(bot: TelegramBot) {
         global.bot = bot
-        await this.handleService.handeMessage()
+        await bot.setMyCommands([
+            {
+                command: '/start',
+                description: 'Начать',
+            },
+            {
+                command: '/me',
+                description: 'Редактировать профиль',
+            },
+            {
+                command: '/startinterview',
+                description: 'Начать собеседование',
+            },
+            {
+                command: '/endinterview',
+                description: 'Закончить собеседование',
+            },
+            {
+                command: '/review',
+                description: 'Оставить/редактировать отзыв',
+            },
+            {
+                command: '/history',
+                description: 'Посмотреть историю',
+            },
+            {
+                command: '/help',
+                description: 'Помощь с командами',
+            },
+            {
+                command: '/info',
+                description: 'Информация о боте',
+            },
+        ])
+
+        bot.on('message', async (msg: TelegramBot.Message) => {
+            return await this.handleService.handleMessage(msg)
+        })
     }
 }
