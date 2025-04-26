@@ -15,5 +15,6 @@ export class BotService implements OnModuleInit {
 
     async initBot(bot: TelegramBot) {
         global.bot = bot
+        await this.handleService.handeMessage()
     }
 }
