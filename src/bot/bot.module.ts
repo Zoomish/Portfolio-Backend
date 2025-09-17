@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common'
 import { BotService } from './bot.service'
-import { HandleService } from './services'
-import { StartMessageService } from './services/handle/startMessage.service'
+import { HandleService, StartMessageService } from './services'
 
 @Module({
     providers: [BotService, HandleService, StartMessageService],
