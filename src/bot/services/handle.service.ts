@@ -10,7 +10,9 @@ export class HandleService {
     ) {}
 
     async handleMessage(msg: TelegramBot.Message) {
+        const bot: TelegramBot = global.bot
         const text = msg.text
+        await bot.deleteMessage(msg.chat.id, msg.message_id)
 
         switch (text) {
             case '/start':
