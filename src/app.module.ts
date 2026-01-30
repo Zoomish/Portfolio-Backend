@@ -1,9 +1,11 @@
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager'
+import { CacheModule } from '@nestjs/cache-manager'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { APP_INTERCEPTOR } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { BotModule } from './bot/bot.module'
+import { GithubModule } from './github/github.module'
+import { LinkedinModule } from './linkedin/linkedin.module'
+import { RedisModule } from './redis.module'
 
 @Module({
     imports: [
@@ -13,13 +15,10 @@ import { BotModule } from './bot/bot.module'
             isGlobal: true,
         }),
         BotModule,
+        RedisModule,
+        GithubModule,
+        LinkedinModule,
     ],
     controllers: [AppController],
-    providers: [
-        {
-            provide: APP_INTERCEPTOR,
-            useClass: CacheInterceptor,
-        },
-    ],
 })
 export class AppModule {}
