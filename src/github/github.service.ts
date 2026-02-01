@@ -93,6 +93,7 @@ export class GithubService {
 
         for (const repo of repos) {
             if (filtered.length >= 6) break
+            console.log(repo)
 
             const hasPortfolioInName = repo.name
                 .toLowerCase()
