@@ -94,18 +94,18 @@ export class GithubService {
         for (const repo of repos) {
             if (filtered.length >= 6) break
 
-            const hasPortfolioInName = repo.name
-                .toLowerCase()
-                .includes('portfolio')
+            const hasPortfolioInName =
+                repo.name.toLowerCase().includes('portfolio') ||
+                repo.name.toLowerCase().includes('zoomish')
             if (hasPortfolioInName) continue
 
             if (!repo.private) {
-                console.log(repo)
                 filtered.push({
                     name: repo.name,
                     description: repo.description || '',
                     language: repo.language || '',
                     url: repo.html_url,
+                    link: repo.homepage,
                     stars: repo.stargazers_count,
                     forks: repo.forks_count,
                 })
@@ -125,6 +125,7 @@ export class GithubService {
                     description: repo.description || '',
                     language: repo.language || '',
                     url: repo.html_url,
+                    link: repo.homepage,
                     stars: repo.stargazers_count,
                     forks: repo.forks_count,
                 })

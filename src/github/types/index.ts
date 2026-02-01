@@ -4,6 +4,7 @@ export interface GithubRepo {
     full_name: string
     private: boolean
     html_url: string
+    homepage: string
     description: string | null
     language: string | null
     stargazers_count: number
@@ -16,6 +17,7 @@ export interface FilteredRepo {
     description: string
     language: string
     url: string
+    link: string
     stars: number
     forks: number
 }
