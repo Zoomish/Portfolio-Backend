@@ -90,14 +90,13 @@ export class GithubService {
         repos: GithubRepo[]
     ): Promise<FilteredRepo[]> {
         const filtered: FilteredRepo[] = []
+        const badWords = ['portfolio', 'zoomish', 'mesto-ad', 'alko-dubai-ECOM']
 
         for (const repo of repos) {
             if (filtered.length >= 6) break
 
-            const hasPortfolioInName =
-                repo.name.toLowerCase().includes('portfolio') ||
-                repo.name.toLowerCase().includes('zoomish')
-            if (hasPortfolioInName) continue
+            if (badWords.some((word) => repo.name.toLowerCase().includes(word)))
+                continue
 
             if (!repo.private) {
                 filtered.push({
