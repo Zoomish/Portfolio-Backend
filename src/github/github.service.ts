@@ -5,16 +5,14 @@ import axios from 'axios'
 import { Cache } from 'cache-manager'
 import { FilteredRepo, GithubRepo } from './types'
 
-
-
 @Injectable()
 export class GithubService {
     private readonly githubToken: string
     private readonly username = 'Zoomish'
 
     constructor(
-        @Inject(CACHE_MANAGER) private cacheManager: Cache,
-        private configService: ConfigService
+        @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+        private readonly configService: ConfigService
     ) {
         this.githubToken = this.configService.get<string>('GITHUB_TOKEN') || ''
     }

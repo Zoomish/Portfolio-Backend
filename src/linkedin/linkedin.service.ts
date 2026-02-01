@@ -16,8 +16,8 @@ export class LinkedInService {
     private readonly username = 'zoomish'
 
     constructor(
-        @Inject(CACHE_MANAGER) private cacheManager: Cache,
-        private configService: ConfigService
+        @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+        private readonly configService: ConfigService
     ) {
         this.rapidApiKey = this.configService.get<string>('RAPIDAPI_KEY') || ''
         this.rapidApiHost =
