@@ -13,6 +13,7 @@ import * as redisStore from 'cache-manager-redis-store'
                 url: configService.get<string>('REDIS_URL'),
                 ttl: 1000 * 60 * 60 * 24 * 2,
                 max: 100,
+                isGlobal: true,
             }),
             inject: [ConfigService],
         }),
