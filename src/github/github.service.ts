@@ -90,7 +90,7 @@ export class GithubService {
         repos: GithubRepo[]
     ): Promise<FilteredRepo[]> {
         const filtered: FilteredRepo[] = []
-        const badWords = ['portfolio', 'zoomish', 'mesto-ad', 'alko-dubai-ECOM']
+        const badWords = ['portfolio', 'zoomish', 'mesto-ad', 'alko-dubai-ecom']
 
         for (const repo of repos) {
             if (filtered.length >= 6) break
