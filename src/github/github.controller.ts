@@ -4,7 +4,7 @@ import { GithubService } from './github.service'
 export class GithubController {
     constructor(private readonly githubService: GithubService) {}
 
-    @Get('repositories')
+    @Get('repos')
     async getRepositories() {
         return this.githubService.getFilteredRepositories()
     }
