@@ -64,7 +64,7 @@ export class GithubService {
             }
         }
 
-        return allRepos
+        return allRepos.sort((a, b) => a.stargazers_count - b.stargazers_count)
     }
 
     private async fetchRepoReadme(
@@ -90,7 +90,13 @@ export class GithubService {
         repos: GithubRepo[]
     ): Promise<FilteredRepo[]> {
         const filtered: FilteredRepo[] = []
-        const badWords = ['portfolio', 'zoomish', 'mesto-ad', 'alko-dubai-ecom', 'bad']
+        const badWords = [
+            'portfolio',
+            'zoomish',
+            'mesto-ad',
+            'alko-dubai-ecom',
+            'bad',
+        ]
 
         for (const repo of repos) {
             if (filtered.length >= 6) break
