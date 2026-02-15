@@ -8,6 +8,7 @@ import {
     LinkedInPostResponse,
     LinkedInProfileDetailResponse,
 } from './types'
+import { CASHED_DATA_TTL } from 'src/const'
 
 @Injectable()
 export class LinkedInService {
@@ -39,7 +40,7 @@ export class LinkedInService {
     private async setCacheData<T>(
         cacheKey: string,
         data: T,
-        ttlSeconds: number = 172800
+        ttlSeconds: number = CASHED_DATA_TTL
     ): Promise<void> {
         await this.cacheManager.set(cacheKey, data, ttlSeconds)
     }

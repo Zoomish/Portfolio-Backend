@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import axios from 'axios'
 import { Cache } from 'cache-manager'
+import { CASHED_DATA_TTL } from 'src/const'
 import { FilteredRepo, GithubRepo } from './types'
 
 @Injectable()
@@ -28,7 +29,7 @@ export class GithubService {
     private async setCacheData<T>(
         cacheKey: string,
         data: T,
-        ttlSeconds: number = 172800
+        ttlSeconds: number = CASHED_DATA_TTL
     ): Promise<void> {
         await this.cacheManager.set(cacheKey, data, ttlSeconds)
     }
