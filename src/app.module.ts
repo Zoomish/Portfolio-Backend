@@ -4,21 +4,29 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ScheduleModule } from '@nestjs/schedule'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import * as redisStore from 'cache-manager-redis-store'
 import * as fs from 'fs'
 import { AppController } from './app.controller'
 import { BotModule } from './bot/bot.module'
+import { CASHED_DATA_TTL } from './const'
 import { GithubModule } from './github/github.module'
 import { LinkedinModule } from './linkedin/linkedin.module'
-import { RedisModule } from './redis.module'
 import { GetActiveService } from './tasks/getActiveService.service'
 import { UserModule } from './user/user.module'
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
-        CacheModule.register({
-            ttl: 1000 * 60 * 60 * 24,
-            isGlobal: true,
+        CacheModule.registerAsync({
+            imports: [ConfigModule],
+            useFactory: async (configService: ConfigService) => ({
+                store: redisStore,
+                url: configService.get<string>('REDIS_URL'),
+                ttl: CASHED_DATA_TTL,
+                max: 100,
+                isGlobal: true,
+            }),
+            inject: [ConfigService],
         }),
         ScheduleModule.forRoot(),
         TypeOrmModule.forRootAsync({
@@ -62,7 +70,6 @@ import { UserModule } from './user/user.module'
             },
         ]),
         BotModule,
-        RedisModule,
         UserModule,
         GithubModule,
         LinkedinModule,
