@@ -5,7 +5,7 @@ import { CacheKey, CacheTTL } from '@nestjs/cache-manager'
 export class AppController {
     @Get()
     @CacheKey('app-hello')
-    @CacheTTL(600)
+    @CacheTTL(900)
     getHello(): string {
         return 'Hello World!'
     }
