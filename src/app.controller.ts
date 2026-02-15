@@ -16,7 +16,7 @@ export class AppController {
         }
 
         const newValue = `Hello World! ${new Date().toISOString()}`
-        await this.cacheManager.set(cacheKey, newValue, 1000 * 60 * 14)
+        await this.cacheManager.set(cacheKey, newValue, 1000 * 60 * 10)
         return newValue
     }
 }
