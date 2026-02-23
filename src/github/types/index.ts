@@ -10,6 +10,9 @@ export interface GithubRepo {
     stargazers_count: number
     forks_count: number
     readme_content?: string
+    owner: {
+        login: string
+    }
 }
 
 export interface FilteredRepo {
