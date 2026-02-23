@@ -102,7 +102,7 @@ export class GithubService {
         for (const repo of repos) {
             if (filtered.length >= 6) break
 
-            if (badWords.some((word) => repo.name.toLowerCase().includes(word)))
+            if (badWords.some((word) => repo.name.toLowerCase().includes(word)) || repo.full_name.toLowerCase().includes('zoomish-inc'))
                 continue
 
             if (!repo.private) {

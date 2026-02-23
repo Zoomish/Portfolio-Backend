@@ -1,11 +1,27 @@
 import { Injectable } from '@nestjs/common'
 import TelegramBot from 'node-telegram-bot-api'
+import { UserService } from 'src/user/user.service'
 
 @Injectable()
 export class StartMessageService {
+    constructor(private readonly userService: UserService) {}
     async startMessage() {
         const bot: TelegramBot = global.bot
         const msg: TelegramBot.Message = global.msg
+        const user = await this.userService.findOne(msg.chat.id)
+
+        if (user) {
+            await this.userService.update(msg.chat.id, {
+                username: msg.chat.username,
+                name: msg.chat.first_name,
+            })
+        } else {
+            await this.userService.create({
+                tgId: msg.chat.id,
+                username: msg.chat.username,
+                name: msg.chat.first_name,
+            })
+        }
         return await bot.sendMessage(
             msg.chat.id,
             '👋 Здравствуйте, <b>(Пользователь)</b>!\n' +
