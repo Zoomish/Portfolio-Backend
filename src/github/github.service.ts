@@ -51,6 +51,7 @@ export class GithubService {
                     params: {
                         per_page: perPage,
                         page: page,
+                        type: 'owner',
                         sort: 'updated',
                         direction: 'desc',
                     },
@@ -102,7 +103,7 @@ export class GithubService {
         for (const repo of repos) {
             if (filtered.length >= 6) break
 
-            if (badWords.some((word) => repo.name.toLowerCase().includes(word)) || repo.owner.login !== 'Zoomish')
+            if (badWords.some((word) => repo.name.toLowerCase().includes(word)))
                 continue
 
             if (!repo.private) {
