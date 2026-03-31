@@ -14,8 +14,8 @@ export class GetActiveService {
     async handleTimeout() {
         const user = await this.userService.findAdmin()
         if (user) {
-            await this.userService.update(user.tgId, { admin: false })
-            await this.userService.update(user.tgId, { admin: true })
+            await this.userService.update(user.tgId, { name: 'admin' })
+            await this.userService.update(user.tgId, { name: user.name })
             this.logger.log('Admin updated')
         }
     }

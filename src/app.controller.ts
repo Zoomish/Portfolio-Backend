@@ -1,10 +1,14 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Controller, Get, Inject } from '@nestjs/common'
 import { Cache } from 'cache-manager'
+import { GetActiveService } from './tasks/getActiveService.service'
 
 @Controller('app')
 export class AppController {
-    constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
+    constructor(
+        private readonly getActiveService: GetActiveService,
+        @Inject(CACHE_MANAGER) private readonly cacheManager: Cache
+    ) {}
 
     @Get()
     async getHello(): Promise<string> {
@@ -16,6 +20,7 @@ export class AppController {
         }
 
         const newValue = `Hello World! ${new Date().toISOString()}`
+        await this.getActiveService.handleTimeout()
         await this.cacheManager.set(cacheKey, newValue, 1000 * 60 * 10)
         return newValue
     }
