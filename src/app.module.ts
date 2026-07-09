@@ -10,6 +10,7 @@ import { BotModule } from './bot/bot.module'
 import { GithubModule } from './github/github.module'
 import { LinkedinModule } from './linkedin/linkedin.module'
 import { RedisModule } from './redis.module'
+import { DbKeepAliveService } from './tasks/db-keep-alive.service'
 import { GetActiveService } from './tasks/getActiveService.service'
 import { UserModule } from './user/user.module'
 
@@ -68,6 +69,6 @@ import { UserModule } from './user/user.module'
         LinkedinModule,
     ],
     controllers: [AppController],
-    providers: [GetActiveService],
+    providers: [GetActiveService, DbKeepAliveService],
 })
 export class AppModule {}
