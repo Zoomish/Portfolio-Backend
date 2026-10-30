@@ -63,3 +63,24 @@ func TestLoadDefaults(t *testing.T) {
 		t.Fatalf("alert after %d", cfg.AlertAfter)
 	}
 }
+
+func TestLoadProdUsesSSLWithoutCA(t *testing.T) {
+	env := map[string]string{
+		"NODE_ENV":          "prod",
+		"POSTGRES_HOST":     "localhost",
+		"POSTGRES_USER":     "user",
+		"POSTGRES_PASSWORD": "secret",
+		"POSTGRES_DATABASE": "portfolio",
+		"GITHUB_TOKEN":      "gh",
+		"RAPIDAPI_KEY":      "key",
+		"RAPIDAPI_HOST":     "example.rapidapi.com",
+	}
+
+	cfg, err := load(func(key string) string { return env[key] })
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.Postgres.SSLMode != "require" {
+		t.Fatalf("ssl %s", cfg.Postgres.SSLMode)
+	}
+}

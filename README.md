@@ -31,7 +31,7 @@ make build
 
 Обязательные: `GITHUB_TOKEN`, `RAPIDAPI_KEY`, `RAPIDAPI_HOST`, `POSTGRES_HOST`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DATABASE`.
 
-`POSTGRES_PORT` по умолчанию `5432`. В `APP_ENV=prod` (или `NODE_ENV=prod`) нужен CA Aiven: файл `ca.pem`, либо `POSTGRES_SSL_CA_FILE`, либо PEM в `POSTGRES_SSL_CA`. Для локальной базы без SSL: `POSTGRES_SSL=disable` или `APP_ENV=dev`.
+`POSTGRES_PORT` по умолчанию `5432`. В `APP_ENV=prod` (или `NODE_ENV=prod`) соединение с Postgres идёт по SSL без проверки сертификата. Для локальной базы без SSL: `POSTGRES_SSL=disable` или `APP_ENV=dev`.
 
 Необязательные:
 
@@ -48,6 +48,4 @@ make build
 
 Render собирает этот сервис из `Dockerfile`, не через `npm start`. URL сервиса не меняйте.
 
-В окружении Render задайте `POSTGRES_SSL_CA`: это текст PEM сертификата Aiven. Файл `ca.pem` в образ не копируется и в репозиторий не коммитится. Без `POSTGRES_SSL_CA` (или `POSTGRES_SSL_CA_FILE` внутри контейнера) процесс завершается на старте и порт не открывается.
-
-Остальные секреты те же, что локально: `GITHUB_TOKEN`, `RAPIDAPI_KEY`, `RAPIDAPI_HOST`, `POSTGRES_*`, `NODE_ENV=prod`. `REDIS_URL` не используется.
+Секреты те же, что локально: `GITHUB_TOKEN`, `RAPIDAPI_KEY`, `RAPIDAPI_HOST`, `POSTGRES_*`, `NODE_ENV=prod`. `REDIS_URL` не используется.

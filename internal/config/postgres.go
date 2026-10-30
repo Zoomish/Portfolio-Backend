@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -14,8 +13,6 @@ type Postgres struct {
 	Password string
 	Database string
 	SSLMode  string
-	CAFile   string
-	CACert   string
 }
 
 func loadPostgres(getenv func(string) string, env string) (Postgres, error) {
@@ -45,38 +42,22 @@ func loadPostgres(getenv func(string) string, env string) (Postgres, error) {
 		return Postgres{}, fmt.Errorf("POSTGRES_PORT: %w", err)
 	}
 
-	sslMode, caFile, caCert, err := postgresSSL(getenv, env)
-	if err != nil {
-		return Postgres{}, err
-	}
-
 	return Postgres{
 		Host:     host,
 		Port:     port,
 		User:     user,
 		Password: password,
 		Database: database,
-		SSLMode:  sslMode,
-		CAFile:   caFile,
-		CACert:   caCert,
+		SSLMode:  postgresSSL(getenv, env),
 	}, nil
 }
 
-func postgresSSL(getenv func(string) string, env string) (string, string, string, error) {
+func postgresSSL(getenv func(string) string, env string) string {
 	if strings.EqualFold(strings.TrimSpace(getenv("POSTGRES_SSL")), "disable") {
-		return "disable", "", "", nil
+		return "disable"
 	}
-
-	caCert := strings.TrimSpace(getenv("POSTGRES_SSL_CA"))
-	caFile := strings.TrimSpace(getenv("POSTGRES_SSL_CA_FILE"))
-	if caCert == "" && caFile == "" {
-		if env == "dev" || env == "development" {
-			return "disable", "", "", nil
-		}
-		if _, statErr := os.Stat("ca.pem"); statErr == nil {
-			return "verify-full", "ca.pem", "", nil
-		}
-		return "", "", "", fmt.Errorf("postgres ssl ca is required (POSTGRES_SSL_CA or POSTGRES_SSL_CA_FILE)")
+	if env == "dev" || env == "development" {
+		return "disable"
 	}
-	return "verify-full", caFile, caCert, nil
+	return "require"
 }

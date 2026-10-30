@@ -2,12 +2,9 @@ package postgres
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"net"
 	"net/url"
-	"os"
 	"strconv"
 	"time"
 
@@ -16,17 +13,9 @@ import (
 )
 
 func NewPool(ctx context.Context, pg config.Postgres) (*pgxpool.Pool, error) {
-	rawURL := connectionURL(pg)
-	poolCfg, err := pgxpool.ParseConfig(rawURL)
+	poolCfg, err := pgxpool.ParseConfig(connectionURL(pg))
 	if err != nil {
 		return nil, fmt.Errorf("postgres config: %w", err)
-	}
-	if pg.SSLMode != "disable" {
-		tlsCfg, err := tlsConfig(pg)
-		if err != nil {
-			return nil, err
-		}
-		poolCfg.ConnConfig.TLSConfig = tlsCfg
 	}
 	poolCfg.MaxConns = 4
 
@@ -54,34 +43,4 @@ func connectionURL(pg config.Postgres) string {
 	query.Set("sslmode", pg.SSLMode)
 	u.RawQuery = query.Encode()
 	return u.String()
-}
-
-func tlsConfig(pg config.Postgres) (*tls.Config, error) {
-	pem, err := caPEM(pg)
-	if err != nil {
-		return nil, err
-	}
-	pool := x509.NewCertPool()
-	if !pool.AppendCertsFromPEM(pem) {
-		return nil, fmt.Errorf("postgres ca pem has no certificates")
-	}
-	return &tls.Config{
-		RootCAs:    pool,
-		ServerName: pg.Host,
-		MinVersion: tls.VersionTLS12,
-	}, nil
-}
-
-func caPEM(pg config.Postgres) ([]byte, error) {
-	if pg.CACert != "" {
-		return []byte(pg.CACert), nil
-	}
-	if pg.CAFile == "" {
-		return nil, fmt.Errorf("postgres ca is empty")
-	}
-	body, err := os.ReadFile(pg.CAFile)
-	if err != nil {
-		return nil, fmt.Errorf("read postgres ca: %w", err)
-	}
-	return body, nil
 }
