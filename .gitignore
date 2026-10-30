@@ -2,6 +2,9 @@
 /dist
 /node_modules
 /build
+/bin
+*.exe
+*.test
 *.pem
 # Logs
 logs
