@@ -52,13 +52,7 @@ func (c *Cycle) github(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("github list: %w", err)
 	}
-	selected, err := github.Select(list, func(fullName string) (string, error) {
-		return c.repos.Readme(ctx, fullName)
-	})
-	if err != nil {
-		return err
-	}
-	payload, err := json.Marshal(selected)
+	payload, err := json.Marshal(github.Select(list))
 	if err != nil {
 		return fmt.Errorf("github encode: %w", err)
 	}

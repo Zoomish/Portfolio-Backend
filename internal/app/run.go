@@ -51,6 +51,14 @@ func Run(ctx context.Context, cfg config.Config) error {
 		rt.keepalive.Start(ctx)
 		return nil
 	})
+	group.Go(func() error {
+		if rt.bot == nil {
+			<-ctx.Done()
+			return nil
+		}
+		rt.bot.Start(ctx)
+		return nil
+	})
 	if err := group.Wait(); err != nil {
 		return fmt.Errorf("run: %w", err)
 	}

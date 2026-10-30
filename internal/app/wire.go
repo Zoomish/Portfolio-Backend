@@ -20,11 +20,16 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+type starter interface {
+	Start(context.Context)
+}
+
 type runtime struct {
 	pool      *pgxpool.Pool
 	server    *http.Server
 	refresh   *refresh.Loop
 	keepalive *kajob.Loop
+	bot       starter
 }
 
 func wire(ctx context.Context, cfg config.Config) (*runtime, error) {
@@ -67,6 +72,7 @@ func wire(ctx context.Context, cfg config.Config) (*runtime, error) {
 		},
 		refresh:   updates,
 		keepalive: keeper,
+		bot:       wireBot(pool, cfg, contentAPI, admin.Alert),
 	}, nil
 }
 

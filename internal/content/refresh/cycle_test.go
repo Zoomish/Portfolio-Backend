@@ -66,8 +66,6 @@ type fakeRepos struct {
 
 func (f fakeRepos) List(context.Context) ([]github.Candidate, error) { return f.list, nil }
 
-func (f fakeRepos) Readme(context.Context, string) (string, error) { return "", nil }
-
 type fakeProfiles struct {
 	body map[linkedin.Part][]byte
 	err  map[linkedin.Part]error

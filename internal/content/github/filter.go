@@ -1,13 +1,11 @@
 package github
 
 import (
-	"fmt"
-	"log/slog"
 	"sort"
 	"strings"
 )
 
-const maxRepos = 6
+const maxRepos = 4
 
 var blockedNameParts = []string{
 	"portfolio",
@@ -17,38 +15,29 @@ var blockedNameParts = []string{
 	"bad",
 }
 
-func Select(repos []Candidate, readmeOf func(fullName string) (string, error)) ([]Repo, error) {
-	sorted := append([]Candidate(nil), repos...)
-	sort.SliceStable(sorted, func(i, j int) bool {
-		return sorted[i].Stars < sorted[j].Stars
+func Select(repos []Candidate) []Repo {
+	public := make([]Candidate, 0, len(repos))
+	for _, repo := range repos {
+		if repo.Private {
+			continue
+		}
+		public = append(public, repo)
+	}
+	sort.SliceStable(public, func(i, j int) bool {
+		return public[i].Stars < public[j].Stars
 	})
 
 	out := make([]Repo, 0, maxRepos)
-	for _, repo := range sorted {
+	for _, repo := range public {
 		if len(out) >= maxRepos {
 			break
 		}
 		if blockedName(repo.Name) {
 			continue
 		}
-		if !repo.Private {
-			out = append(out, toRepo(repo))
-			continue
-		}
-		if readmeOf == nil {
-			return nil, fmt.Errorf("readme lookup is nil")
-		}
-		readme, err := readmeOf(repo.FullName)
-		if err != nil {
-			slog.Warn("skip repo readme", "repo", repo.FullName, "err", err)
-			continue
-		}
-		text := strings.ToLower(readme)
-		if strings.Contains(text, "project") || strings.Contains(text, "проект") {
-			out = append(out, toRepo(repo))
-		}
+		out = append(out, toRepo(repo))
 	}
-	return out, nil
+	return out
 }
 
 func blockedName(name string) bool {

@@ -58,22 +58,6 @@ func (c *Client) List(ctx context.Context) ([]Candidate, error) {
 	return all, nil
 }
 
-func (c *Client) Readme(ctx context.Context, fullName string) (string, error) {
-	body, status, err := c.get(ctx, "https://api.github.com/repos/"+fullName+"/readme", map[string]string{
-		"Accept": "application/vnd.github.v3.raw",
-	})
-	if err != nil {
-		return "", fmt.Errorf("github readme %s: %w", fullName, err)
-	}
-	if status == http.StatusNotFound {
-		return "", nil
-	}
-	if status != http.StatusOK {
-		return "", fmt.Errorf("github readme %s: status %d", fullName, status)
-	}
-	return string(body), nil
-}
-
 func (c *Client) get(ctx context.Context, rawURL string, headers map[string]string) ([]byte, int, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
 	if err != nil {

@@ -11,7 +11,6 @@ import (
 
 type RepoSource interface {
 	List(ctx context.Context) ([]github.Candidate, error)
-	Readme(ctx context.Context, fullName string) (string, error)
 }
 
 type ProfileSource interface {

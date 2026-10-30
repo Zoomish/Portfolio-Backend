@@ -1,18 +1,13 @@
 package github
 
-import (
-	"errors"
-	"testing"
-)
+import "testing"
 
 func TestSelect(t *testing.T) {
 	home := "https://example.com"
 	tests := []struct {
-		name      string
-		repos     []Candidate
-		readmes   map[string]string
-		readmeErr map[string]error
-		want      []string
+		name  string
+		repos []Candidate
+		want  []string
 	}{
 		{
 			name: "public repos sorted by stars and capped",
@@ -25,7 +20,19 @@ func TestSelect(t *testing.T) {
 				pub("c", 6),
 				pub("d", 7),
 			},
-			want: []string{"low", "mid", "a", "b", "c", "d"},
+			want: []string{"low", "mid", "a", "b"},
+		},
+		{
+			name: "private is excluded before the cap",
+			repos: []Candidate{
+				priv("secret", "owner/secret", 0),
+				pub("a", 1),
+				pub("b", 2),
+				pub("c", 3),
+				pub("d", 4),
+				pub("e", 5),
+			},
+			want: []string{"a", "b", "c", "d"},
 		},
 		{
 			name: "skips blocked names",
@@ -38,38 +45,6 @@ func TestSelect(t *testing.T) {
 				pub("kept", 6),
 			},
 			want: []string{"kept"},
-		},
-		{
-			name: "private readme must mention a project",
-			repos: []Candidate{
-				priv("hidden", "owner/hidden", 1),
-				priv("shown", "owner/shown", 2),
-				priv("ru", "owner/ru", 3),
-			},
-			readmes: map[string]string{
-				"owner/hidden": "just a note",
-				"owner/shown":  "This Project ships",
-				"owner/ru":     "Учебный проект",
-			},
-			want: []string{"shown", "ru"},
-		},
-		{
-			name: "empty readme skips private repo",
-			repos: []Candidate{
-				priv("empty", "owner/empty", 1),
-				pub("public", 2),
-			},
-			readmes: map[string]string{},
-			want:    []string{"public"},
-		},
-		{
-			name: "readme error skips that repo",
-			repos: []Candidate{
-				priv("broken", "owner/broken", 1),
-				pub("public", 2),
-			},
-			readmeErr: map[string]error{"owner/broken": errors.New("boom")},
-			want:      []string{"public"},
 		},
 		{
 			name: "homepage stays nil",
@@ -88,15 +63,7 @@ func TestSelect(t *testing.T) {
 			if tt.name == "public repos sorted by stars and capped" {
 				tt.repos[0].Homepage = &home
 			}
-			got, err := Select(tt.repos, func(fullName string) (string, error) {
-				if err := tt.readmeErr[fullName]; err != nil {
-					return "", err
-				}
-				return tt.readmes[fullName], nil
-			})
-			if err != nil {
-				t.Fatal(err)
-			}
+			got := Select(tt.repos)
 			if len(got) != len(tt.want) {
 				t.Fatalf("len %d, want %d (%v)", len(got), len(tt.want), names(got))
 			}
