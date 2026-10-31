@@ -23,6 +23,7 @@ type Snapshots interface {
 	Profile(ctx context.Context) (json.RawMessage, error)
 	Contact(ctx context.Context) (json.RawMessage, error)
 	Projects(ctx context.Context) (json.RawMessage, error)
+	Posts(ctx context.Context) (json.RawMessage, error)
 }
 
 type Events interface {
@@ -78,6 +79,12 @@ func (n *Nav) render(ctx context.Context, kind string) (card.View, error) {
 			return card.View{}, err
 		}
 		return card.Projects(raw)
+	case card.ScreenPosts:
+		raw, err := n.Snaps.Posts(ctx)
+		if err != nil {
+			return card.View{}, err
+		}
+		return card.Posts(raw)
 	case card.ScreenContact:
 		raw, err := n.Snaps.Contact(ctx)
 		if err != nil {

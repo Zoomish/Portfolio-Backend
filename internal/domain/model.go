@@ -6,6 +6,7 @@ const (
 	EventStart    = "start"
 	EventAbout    = "about"
 	EventProjects = "projects"
+	EventPosts    = "posts"
 	EventContact  = "contact"
 )
 

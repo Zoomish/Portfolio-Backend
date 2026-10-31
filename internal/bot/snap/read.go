@@ -35,3 +35,11 @@ func (r Reader) Projects(ctx context.Context) (json.RawMessage, error) {
 	}
 	return body.Data, nil
 }
+
+func (r Reader) Posts(ctx context.Context) (json.RawMessage, error) {
+	body, err := r.Snaps.LinkedInPart(ctx, content.SourceLinkedInPosts)
+	if err != nil {
+		return nil, err
+	}
+	return body.Data, nil
+}

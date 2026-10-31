@@ -18,6 +18,7 @@ type Summary struct {
 	Start    int
 	About    int
 	Projects int
+	Posts    int
 	Contact  int
 }
 
@@ -64,6 +65,7 @@ func (q query) Summary(ctx context.Context, now time.Time) (Summary, error) {
 		Start:    counts[domain.EventStart],
 		About:    counts[domain.EventAbout],
 		Projects: counts[domain.EventProjects],
+		Posts:    counts[domain.EventPosts],
 		Contact:  counts[domain.EventContact],
 	}, nil
 }
@@ -81,16 +83,16 @@ func Allowed(actor, admin int64) bool {
 }
 
 func FormatSummary(s Summary) string {
-	return fmt.Sprintf("<b>Статистика</b>\n\nЛюдей: %d\nЗа 7 дней: %d\n\n/start: %d\nОбо мне: %d\nПроекты: %d\nКонтакт: %d",
-		s.Total, s.Week, s.Start, s.About, s.Projects, s.Contact)
+	return fmt.Sprintf("<b>📊 Статистика</b>\n\nЛюдей: %d\nЗа 7 дней: %d\n\n/start: %d\nОбо мне: %d\nПроекты: %d\nПосты: %d\nКонтакт: %d",
+		s.Total, s.Week, s.Start, s.About, s.Projects, s.Posts, s.Contact)
 }
 
 func FormatRecent(users []domain.User) string {
 	if len(users) == 0 {
-		return "<b>Последние</b>\n\nПока никого нет."
+		return "<b>👥 Последние</b>\n\nПока никого нет."
 	}
 	var b strings.Builder
-	b.WriteString("<b>Последние</b>")
+	b.WriteString("<b>👥 Последние</b>")
 	for _, user := range users {
 		b.WriteString("\n\n")
 		b.WriteString(escape(user.Name))
@@ -108,11 +110,11 @@ func FormatRecent(users []domain.User) string {
 }
 
 func SummaryKeys() telegram.Keyboard {
-	return telegram.Keyboard{{{Text: "Последние 20", Data: "stats-recent"}}}
+	return telegram.Keyboard{{{Text: "👥 Последние 20", Data: "stats-recent"}}}
 }
 
 func RecentKeys() telegram.Keyboard {
-	return telegram.Keyboard{{{Text: "К сводке", Data: "stats-summary"}}}
+	return telegram.Keyboard{{{Text: "📊 К сводке", Data: "stats-summary"}}}
 }
 
 func escape(s string) string {

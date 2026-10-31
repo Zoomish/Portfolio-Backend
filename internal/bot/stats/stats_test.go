@@ -25,20 +25,20 @@ func TestLoadAndFormat(t *testing.T) {
 		UpdatedAt: now,
 	}}}
 	events := fakeEvents{counts: map[string]int{
-		domain.EventStart: 3, domain.EventAbout: 2, domain.EventProjects: 1,
+		domain.EventStart: 3, domain.EventAbout: 2, domain.EventProjects: 1, domain.EventPosts: 4,
 	}}
 	summary, err := NewQuery(users, events).Summary(context.Background(), now)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if summary.Total != 4 || summary.Week != 2 || summary.Start != 3 || summary.Contact != 0 {
+	if summary.Total != 4 || summary.Week != 2 || summary.Start != 3 || summary.Posts != 4 || summary.Contact != 0 {
 		t.Fatalf("%+v", summary)
 	}
 	if !users.since.Equal(now.Add(-7 * 24 * time.Hour)) {
 		t.Fatalf("since %s", users.since)
 	}
 	text := FormatSummary(summary)
-	if !strings.Contains(text, "Людей: 4") || !strings.Contains(text, "Обо мне: 2") {
+	if !strings.Contains(text, "Людей: 4") || !strings.Contains(text, "Обо мне: 2") || !strings.Contains(text, "Посты: 4") {
 		t.Fatalf("summary %s", text)
 	}
 	recent := FormatRecent(users.recent)

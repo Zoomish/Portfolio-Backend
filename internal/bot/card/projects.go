@@ -18,7 +18,7 @@ func Projects(raw json.RawMessage) (View, error) {
 		return View{}, err
 	}
 	var b strings.Builder
-	b.WriteString("<b>Проекты</b>")
+	b.WriteString("<b>💼 Проекты</b>")
 	if len(repos) == 0 {
 		b.WriteString("\n\nПубличных проектов пока нет.")
 		return View{Text: b.String(), Keys: sectionKeys(ScreenProjects), Event: domain.EventProjects}, nil

@@ -9,6 +9,7 @@ func TestSplit(t *testing.T) {
 		{"menu-about", "menu", "about"},
 		{"menu-projects", "menu", "projects"},
 		{"menu-contact", "menu", "contact"},
+		{"menu-posts", "menu", "posts"},
 		{"menu-home", "menu", "home"},
 		{"stats-recent", "stats", "recent"},
 		{"stats-summary", "stats", "summary"},

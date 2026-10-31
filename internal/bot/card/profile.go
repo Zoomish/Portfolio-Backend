@@ -21,14 +21,18 @@ func Home(raw json.RawMessage) (View, error) {
 		return View{}, err
 	}
 	var b strings.Builder
-	b.WriteString("Здравствуйте. Я <b>")
+	b.WriteString("👋 Здравствуйте. Я <b>")
 	b.WriteString(escape(item.Fullname))
 	b.WriteString("</b>.\n")
 	if item.Headline != "" {
 		b.WriteString(escape(item.Headline))
 		b.WriteString("\n")
 	}
-	b.WriteString("\nВыберите раздел.")
+	b.WriteString("\n<b>Кнопки:</b>\n")
+	b.WriteString("👤 Обо мне — путь, навыки и стек\n")
+	b.WriteString("💼 Проекты — публичные репозитории со ссылками\n")
+	b.WriteString("📝 Посты — последние публикации из LinkedIn\n")
+	b.WriteString("✉️ Контакт — почта и ссылка на профиль")
 	return View{Text: b.String(), Keys: HomeKeys()}, nil
 }
 
@@ -38,7 +42,7 @@ func About(raw json.RawMessage) (View, error) {
 		return View{}, err
 	}
 	var b strings.Builder
-	b.WriteString("<b>")
+	b.WriteString("<b>👤 ")
 	b.WriteString(escape(item.Fullname))
 	b.WriteString("</b>\n")
 	if item.Headline != "" {

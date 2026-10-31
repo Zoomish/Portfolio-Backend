@@ -34,7 +34,7 @@ func Contact(raw json.RawMessage) (View, error) {
 		return View{}, ErrIncomplete
 	}
 	var b strings.Builder
-	b.WriteString("<b>Контакт</b>\n")
+	b.WriteString("<b>✉️ Контакт</b>\n")
 	if info.FullName != "" {
 		b.WriteString(escape(info.FullName))
 		b.WriteString("\n")

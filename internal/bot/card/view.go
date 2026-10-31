@@ -11,6 +11,7 @@ const (
 	ScreenHome     = "home"
 	ScreenAbout    = "about"
 	ScreenProjects = "projects"
+	ScreenPosts    = "posts"
 	ScreenContact  = "contact"
 )
 
@@ -24,7 +25,7 @@ type View struct {
 
 func Kind(rest string) (string, bool) {
 	switch rest {
-	case ScreenHome, ScreenAbout, ScreenProjects, ScreenContact:
+	case ScreenHome, ScreenAbout, ScreenProjects, ScreenPosts, ScreenContact:
 		return rest, true
 	default:
 		return "", false
@@ -40,27 +41,33 @@ func Unavailable() View {
 
 func HomeKeys() telegram.Keyboard {
 	return telegram.Keyboard{
-		{{Text: "Обо мне", Data: "menu-about"}},
-		{{Text: "Проекты", Data: "menu-projects"}},
-		{{Text: "Контакт", Data: "menu-contact"}},
+		{{Text: "👤 Обо мне", Data: "menu-about"}},
+		{{Text: "💼 Проекты", Data: "menu-projects"}},
+		{{Text: "📝 Посты", Data: "menu-posts"}},
+		{{Text: "✉️ Контакт", Data: "menu-contact"}},
 	}
 }
 
 func sectionKeys(current string) telegram.Keyboard {
-	var row []telegram.Button
-	if current != ScreenAbout {
-		row = append(row, telegram.Button{Text: "Обо мне", Data: "menu-about"})
+	items := []struct {
+		screen string
+		text   string
+		data   string
+	}{
+		{ScreenAbout, "👤 Обо мне", "menu-about"},
+		{ScreenProjects, "💼 Проекты", "menu-projects"},
+		{ScreenPosts, "📝 Посты", "menu-posts"},
+		{ScreenContact, "✉️ Контакт", "menu-contact"},
 	}
-	if current != ScreenProjects {
-		row = append(row, telegram.Button{Text: "Проекты", Data: "menu-projects"})
+	keys := make(telegram.Keyboard, 0, len(items)+1)
+	for _, item := range items {
+		if item.screen == current {
+			continue
+		}
+		keys = append(keys, []telegram.Button{{Text: item.text, Data: item.data}})
 	}
-	if current != ScreenContact {
-		row = append(row, telegram.Button{Text: "Контакт", Data: "menu-contact"})
-	}
-	return telegram.Keyboard{
-		row,
-		{{Text: "В начало", Data: "menu-home"}},
-	}
+	keys = append(keys, []telegram.Button{{Text: "🏠 В начало", Data: "menu-home"}})
+	return keys
 }
 
 func escape(s string) string {
