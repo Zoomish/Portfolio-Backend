@@ -20,7 +20,7 @@ func TestSelect(t *testing.T) {
 				pub("c", 6),
 				pub("d", 7),
 			},
-			want: []string{"low", "mid", "a", "b"},
+			want: []string{"high", "d", "c", "b"},
 		},
 		{
 			name: "private is excluded before the cap",
@@ -32,7 +32,7 @@ func TestSelect(t *testing.T) {
 				pub("d", 4),
 				pub("e", 5),
 			},
-			want: []string{"a", "b", "c", "d"},
+			want: []string{"e", "d", "c", "b"},
 		},
 		{
 			name: "skips blocked names",

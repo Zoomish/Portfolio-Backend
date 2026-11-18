@@ -24,7 +24,7 @@ func Select(repos []Candidate) []Repo {
 		public = append(public, repo)
 	}
 	sort.SliceStable(public, func(i, j int) bool {
-		return public[i].Stars < public[j].Stars
+		return public[i].Stars > public[j].Stars
 	})
 
 	out := make([]Repo, 0, maxRepos)
